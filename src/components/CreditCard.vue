@@ -27,7 +27,7 @@
         </fieldset>
       </div>
     </div>
-    <button class="button">Submit</button>
+    <button class="button" type="submit">Submit</button>
   </form>
 </template>
 
