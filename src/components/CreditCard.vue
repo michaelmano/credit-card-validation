@@ -16,13 +16,13 @@
       </div>
       <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
-          <input v-model="expiary" name="expiary" autocomplete="off" class="input peer" placeholder=" " inputmode="numerical" type="text" data-pattern-validate />
+          <input v-model="expiary" type="text" id="expiary" class="input peer" placeholder=" " required/>
           <label for="expiary" class="label">Exp. Date (mm/yyyy)</label>
         </fieldset>
       </div>
       <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
-          <input v-model="ccv" id="ccv" type="number" class="input peer" placeholder=" " required />
+          <input v-model="ccv" type="number" id="ccv" class="input peer" placeholder=" " required />
           <label for="ccv" class="label">CCV</label>
         </fieldset>
       </div>
