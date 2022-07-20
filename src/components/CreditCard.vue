@@ -10,19 +10,19 @@
       </div>
       <div class="w-full px-3 mb-5">
         <fieldset class="fieldset">
-          <input type="number" id="credit-card-number" class="input peer" placeholder=" " required />
+          <input v-model="creditCardNumber" type="number" id="credit-card-number" class="input peer" placeholder=" " required />
           <label for="credit-card-number" class="label">Credit Card Number</label>
         </fieldset>
       </div>
       <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
           <input v-model="expiary" name="expiary" autocomplete="off" class="input peer" placeholder=" " inputmode="numerical" type="text" data-pattern-validate />
-          <label for="expiary" class="label">Exp. Date (MM/YY)</label>
+          <label for="expiary" class="label">Exp. Date (mm/yyyy)</label>
         </fieldset>
       </div>
       <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
-          <input id="ccv" class="input peer" placeholder=" " required />
+          <input id="ccv" type="number" class="input peer" placeholder=" " required />
           <label for="ccv" class="label">CCV</label>
         </fieldset>
       </div>
@@ -37,15 +37,29 @@ import { defineComponent, watch, ref } from 'vue'
 export default defineComponent({
   name: 'VueCreditCard',
   setup() {
-    let expiary = ref('');
+    const expiary = ref('');
+    const creditCardNumber = ref('');
 
     watch(expiary, (currentValue, oldValue) => {
+      // Add dash inbetween month and year
       if (oldValue.length === 1 && currentValue.length === 2) {
         expiary.value += '/';
+      }
+
+      // Dont go over mm/yyyy
+      if (currentValue.length == 8) {
+        expiary.value = oldValue;
+      }
+    });
+
+    watch(creditCardNumber, (currentValue, oldValue) => {
+      if (oldValue.toString().length < 4 && currentValue.toString().length === 4) {
+        console.log('Find Issuer');
       }
     });
 
     return {
+      creditCardNumber,
       expiary,
     };
   },
