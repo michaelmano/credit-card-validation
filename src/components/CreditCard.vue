@@ -4,7 +4,7 @@
     <div class="flex flex-wrap -mx-3 mb-6">
       <div class="w-full px-3 mb-5">
         <fieldset class="fieldset">
-          <input id="name" class="input peer" placeholder=" " required />
+          <input v-model="name" id="name" class="input peer" placeholder=" " required />
           <label for="name" class="label">Name on card</label>
         </fieldset>
       </div>
@@ -37,6 +37,7 @@ import { defineComponent, watch, ref } from 'vue'
 export default defineComponent({
   name: 'VueCreditCard',
   setup() {
+    const name = ref('');
     const expiary = ref('');
     const creditCardNumber = ref('');
 
@@ -59,6 +60,7 @@ export default defineComponent({
     });
 
     return {
+      name,
       creditCardNumber,
       expiary,
     };
