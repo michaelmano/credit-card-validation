@@ -14,30 +14,44 @@
           <label for="credit-card-number" class="label">Credit Card Number</label>
         </fieldset>
       </div>
-      <div class="w-full md:w-1/2 px-3 mb-5">
+      <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
-          <input name="expiary" autocomplete="off" class="input peer" placeholder=" " inputmode="numerical" type="text" data-pattern-validate />
-          <label for="expiary" class="label">Exp. Date</label>
+          <input v-model="expiary" name="expiary" autocomplete="off" class="input peer" placeholder=" " inputmode="numerical" type="text" data-pattern-validate />
+          <label for="expiary" class="label">Exp. Date (MM/YY)</label>
         </fieldset>
       </div>
-      <div class="w-full md:w-1/2 px-3 mb-5">
+      <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
           <input id="ccv" class="input peer" placeholder=" " required />
           <label for="ccv" class="label">CCV</label>
         </fieldset>
       </div>
     </div>
-    <button class="button">Validate</button>
+    <button class="button">Submit</button>
   </form>
 </template>
+
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, watch, ref } from 'vue'
 
 export default defineComponent({
   name: 'VueCreditCard',
-  setup() {},
+  setup() {
+    let expiary = ref('');
+
+    watch(expiary, (currentValue, oldValue) => {
+      if (oldValue.length === 1 && currentValue.length === 2) {
+        expiary.value += '/';
+      }
+    });
+
+    return {
+      expiary,
+    };
+  },
 })
 </script>
+
 <style lang="scss" scoped>
 .button {
   @apply
