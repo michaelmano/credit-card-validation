@@ -3,7 +3,6 @@ import { describe, it, expect } from "vitest";
 import CreditCard from "./src/components/CreditCard.vue";
 
 describe('CreditCard.vue', () => {
-  const inputIDs = ['#name', '#expiary', '#credit-card-number', '#ccv'];
 
   it('should display header text', () => {
     const msg = 'Credit card validation';
@@ -11,18 +10,29 @@ describe('CreditCard.vue', () => {
     expect(wrapper.find('h2').text()).toEqual(msg)
   });
 
-  inputIDs.forEach(inputID => {
-    it('should have an input with the id: ' + inputID, () => {
-      const wrapper = mount(CreditCard)
-      expect(wrapper.find(inputID));
-    });
+  it('should have a name input', () => {
+    const wrapper = mount(CreditCard)
+    expect(wrapper.find());
+  });
 
-    //Not currently in vitest
-    // it('should should be required: ' + inputID, () => {
-    //   const wrapper = mount(CreditCard);
-    //   const input = wrapper.find(inputID);
-    //   expect(input).toHaveAttribute('required');
-    // });
+  it('should have a credit card input', () => {
+    const wrapper = mount(CreditCard)
+    expect(wrapper.find('#credit-card-number'));
+  });
+
+  it('should have a expiary input', () => {
+    const wrapper = mount(CreditCard)
+    expect(wrapper.find('#expiary'));
+  });
+
+  it('should have a ccv input', () => {
+    const wrapper = mount(CreditCard)
+    expect(wrapper.find('#ccv'));
+  });
+
+  it('should have a submit button', () => {
+    const wrapper = mount(CreditCard)
+    expect(wrapper.find('button[type=submit'));
   });
 
 });
