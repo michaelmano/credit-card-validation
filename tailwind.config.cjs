@@ -234,7 +234,10 @@ module.exports = {
       150: '1.5',
       200: '2',
     },
-    container: {},
+    container: {
+        centered: true,
+        padding: 10,
+    },
     content: {
       none: 'none',
     },
