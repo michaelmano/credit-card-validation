@@ -31,40 +31,50 @@
   </form>
 </template>
 
-<script>
-import { defineComponent, watch, ref } from 'vue'
+<script lang="ts">
+import { defineComponent, watch, ref } from 'vue';
+import type { Ref } from 'vue';
 
 export default defineComponent({
   name: 'VueCreditCard',
   setup() {
-    const name = ref('');
-    const creditCardNumber = ref('');
-    const expiary = ref('');
-    const ccv = ref('');
+    const name: Ref<string> = ref('');
+    const creditCardNumber: Ref<string | number> = ref('');
+    const expiary: Ref<string | number> = ref('');
+    const ccv: Ref<string | number> = ref('');
 
 
     watch(expiary, (currentValue, oldValue) => {
+      const currentLength = currentValue.toString().length;
+      const oldLength = oldValue.toString().length;
+
       // Add dash inbetween month and year
-      if (oldValue.length === 1 && currentValue.length === 2) {
+      if (oldLength === 1 && currentLength === 2) {
         expiary.value += '/';
       }
 
       // Dont go over mm/yyyy
-      if (currentValue.length == 8) {
+      if (currentLength == 8) {
         expiary.value = oldValue;
       }
     });
 
     watch(creditCardNumber, (currentValue, oldValue) => {
-      if (oldValue.toString().length < 4 && currentValue.toString().length === 4) {
+      const currentLength = currentValue.toString().length;
+      const oldLength = oldValue.toString().length;
+
+      if (oldLength < 4 && currentLength === 4) {
         console.log('Find Issuer');
       }
     });
 
     // This is an override as maxlength does not work on number inputs in chrome
     watch(ccv, (currentValue, oldValue) => {
-      // Max input value of 999
-      if (oldValue.toString().length < 4 && currentValue.toString().length === 4) {
+      const currentLength = currentValue.toString().length;
+      const oldLength = oldValue.toString().length;
+
+      // Max input value of 9999 (Diners clubs can have a 4 digit ccv)
+      if (oldLength < 5 && currentLength === 5) {
         ccv.value = oldValue;
       }
     });
