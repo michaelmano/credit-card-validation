@@ -22,7 +22,7 @@
       </div>
       <div class="w-full md:w-1/2 px-3">
         <fieldset class="fieldset">
-          <input id="ccv" type="number" class="input peer" placeholder=" " required />
+          <input v-model="ccv" id="ccv" type="number" class="input peer" placeholder=" " required />
           <label for="ccv" class="label">CCV</label>
         </fieldset>
       </div>
@@ -38,8 +38,10 @@ export default defineComponent({
   name: 'VueCreditCard',
   setup() {
     const name = ref('');
-    const expiary = ref('');
     const creditCardNumber = ref('');
+    const expiary = ref('');
+    const ccv = ref('');
+
 
     watch(expiary, (currentValue, oldValue) => {
       // Add dash inbetween month and year
@@ -59,10 +61,19 @@ export default defineComponent({
       }
     });
 
+    // This is an override as maxlength does not work on number inputs in chrome
+    watch(ccv, (currentValue, oldValue) => {
+      // Max input value of 999
+      if (oldValue.toString().length < 4 && currentValue.toString().length === 4) {
+        ccv.value = oldValue;
+      }
+    });
+
     return {
       name,
       creditCardNumber,
       expiary,
+      ccv,
     };
   },
 })
