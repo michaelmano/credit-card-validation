@@ -5,6 +5,7 @@ export default class CreditCard {
   number: Ref<string | number>;
   expiry: Ref<string>;
   ccv: Ref<string | number>;
+  todaysDate: Date;
   types: CreditCardType[] = [
     {
       name: 'AMEX',
@@ -32,6 +33,7 @@ export default class CreditCard {
     this.number = number;
     this.expiry = expiry;
     this.ccv = ccv;
+    this.todaysDate = new Date();
   }
 
   getNumber(): string {
@@ -48,6 +50,14 @@ export default class CreditCard {
     });
 
     return type;
+  }
+
+  expiryIsValid(): boolean {
+    const [month, year] = this.expiry.value.split('/');
+    const monthIndex = parseInt(month) - 1;
+    const date = new Date(parseInt(year), monthIndex, 1, 0, 0, 0, 0);
+
+    return date > this.todaysDate;
   }
 
   numberIsValid(): boolean {

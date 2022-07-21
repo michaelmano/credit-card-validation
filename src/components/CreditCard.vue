@@ -41,6 +41,7 @@
               placeholder=" "
               required
               @input="clearErrors"
+              @keypress="isNumber"
             >
             <div
               v-if="type"
@@ -74,6 +75,7 @@
             class="input peer"
             placeholder=" "
             required
+            @keypress="isNumber"
             @input="clearErrors"
           >
           <label
@@ -101,6 +103,7 @@
             class="input peer"
             placeholder=" "
             required
+            @keypress="isNumber"
           >
           <label
             for="ccv"
@@ -122,6 +125,12 @@
           >
             Validate
           </button>
+          <h3
+            v-show="cardIsValid"
+            class="text-xl text-green-600 mt-4"
+          >
+            Credit card is valid.
+          </h3>
         </fieldset>
       </div>
     </div>
@@ -136,6 +145,7 @@ import CreditCard from '../classes/CreditCard'
 export default defineComponent({
   name: 'VueCreditCard',
   setup() {
+    const cardIsValid: Ref<boolean> = ref(false);
     const name: Ref<string> = ref('');
     const creditCardNumber: Ref<string | number> = ref('');
     const expiry: Ref<string | number> = ref('');
@@ -148,10 +158,21 @@ export default defineComponent({
     const creditCard = new CreditCard(creditCardNumber, expiry, ccv);
     const type = computed(() => creditCard.getType());
     const numberIsValid = computed(() => creditCard.numberIsValid());
+    const dateIsValid = computed(() => creditCard.expiryIsValid());
 
     const validate = () => {
       formErrors.cardNumber = !numberIsValid.value;
-      formErrors.expiry = true;
+      formErrors.expiry = !dateIsValid.value;
+      cardIsValid.value = formErrors.expiry === false && formErrors.cardNumber === false;
+    }
+
+    const isNumber = (evt: KeyboardEvent) => {
+      const charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
     }
 
     const clearErrors = () => {
@@ -162,10 +183,11 @@ export default defineComponent({
     watch(expiry, (currentValue, oldValue) => {
       const currentLength = currentValue.toString().length;
       const oldLength = oldValue.toString().length;
+      const string =  expiry.value.toString();
 
       // Add dash inbetween month and year
-      if (oldLength === 1 && currentLength === 2) {
-        expiry.value += '/';
+      if (currentLength >= 2 && !string.includes('/') && oldLength !== 3 && currentLength !== 2) {
+        expiry.value = `${string.substring(0, 2)}/${string.substring(2)}`;
       }
 
       // Dont go over mm/yyyy
@@ -195,6 +217,8 @@ export default defineComponent({
       formErrors,
       validate,
       clearErrors,
+      isNumber,
+      cardIsValid,
     }
   },
 })
