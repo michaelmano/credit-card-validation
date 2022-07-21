@@ -106,7 +106,7 @@ describe('CreditCard.ts', () => {
     expect(creditCard.expiryIsValid()).toEqual(false);
   });
 
-  it('should show a a future expiry date as invalid', () => {
+  it('should show a a future expiry date as valid', () => {
     const number = ref('4111111111111');
     const expiry = ref('01/2050');
     const creditCard = new CreditCard(number, expiry);
