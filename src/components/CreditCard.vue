@@ -1,5 +1,6 @@
 <template>
   <form
+    autocomplete="off"
     class="w-full max-w-lg mx-auto content-center container"
     @submit.prevent="validate"
   >
