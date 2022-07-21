@@ -98,4 +98,18 @@ describe('CreditCard.ts', () => {
     const creditCard = new CreditCard(number);
     expect(creditCard.getType()).toEqual(undefined);
   });
+
+  it('should show a previous expiry date as invalid', () => {
+    const number = ref('4111111111111');
+    const expiry = ref('01/2001');
+    const creditCard = new CreditCard(number, expiry);
+    expect(creditCard.expiryIsValid()).toEqual(false);
+  });
+
+  it('should show a a future expiry date as invalid', () => {
+    const number = ref('4111111111111');
+    const expiry = ref('01/2050');
+    const creditCard = new CreditCard(number, expiry);
+    expect(creditCard.expiryIsValid()).toEqual(true);
+  });
 });
