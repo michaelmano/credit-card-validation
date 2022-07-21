@@ -1,4 +1,26 @@
 <template>
+  <Transition name="bounce">
+    <div
+      v-show="cardIsValid"
+      class="bg-blue-900 text-center py-4 lg:px-4 absolute top-0 left-0 right-0"
+    >
+      <div
+        class="p-2 bg-blue-500 items-center text-blue-100 leading-none lg:rounded-full flex lg:inline-flex"
+        role="alert"
+      >
+        <span
+          class="flex rounded-full bg-blue-600 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >
+          Success
+        </span>
+        <span
+          class="font-semibold mr-2 text-left flex-auto"
+        >
+          The credit card is valid.
+        </span>
+      </div>
+    </div>
+  </Transition>
   <form
     autocomplete="off"
     class="w-full max-w-lg mx-auto content-center container"
@@ -43,7 +65,7 @@
               @input="clearErrors"
               @keypress="isNumber"
             >
-             <label
+            <label
               for="credit-card-number"
               class="label"
             >
@@ -125,12 +147,6 @@
           >
             Validate
           </button>
-          <h3
-            v-show="cardIsValid"
-            class="text-xl text-green-600 mt-4"
-          >
-            Credit card is valid.
-          </h3>
         </fieldset>
       </div>
     </div>
@@ -178,7 +194,16 @@ export default defineComponent({
     const clearErrors = () => {
       formErrors.cardNumber = false;
       formErrors.expiry = false;
+      cardIsValid.value = false;
     }
+
+    watch(cardIsValid, (currentValue) => {
+      if (currentValue === true) {
+        setTimeout(() => {
+          clearErrors();
+        }, 3500);
+      }
+    });
 
     watch(expiry, (currentValue, oldValue) => {
       const currentLength = currentValue.toString().length;
@@ -298,6 +323,32 @@ export default defineComponent({
     rounded-r
     px-2
     text-xs;
+  }
+}
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: fade-out 0.5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0), translate(-50%, -50%);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>
