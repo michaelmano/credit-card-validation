@@ -87,7 +87,7 @@ export default class CreditCard {
       .reverse()
       .map((x) => parseInt(x));
 
-    const lastDigit = arr.shift();
+    const lastDigit = arr.shift() ?? 0;
 
     const sum = arr.reduce((acc, val, i) => {
         return i % 2 !== 0 ? acc + val : acc + ((val *= 2) > 9 ? val - 9 : val);
