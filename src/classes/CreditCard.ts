@@ -40,7 +40,7 @@ export default class CreditCard {
     return this.number.value.toString();
   }
 
-  getType(): CreditCardType|undefined {
+  getType(): CreditCardType | undefined {
     const type = this.types.find(type => {
       const filtered = type.startsWith.filter((number) => {
         return this.getNumber().startsWith(number.toString());
@@ -85,13 +85,14 @@ export default class CreditCard {
     const arr = (this.getNumber())
       .split('')
       .reverse()
-      .map((n) => parseInt(n));
+      .map((x) => parseInt(x));
 
-    const lastDigit = arr.splice(0, 1)[0];
-    const sum = arr.reduce((acc, val, index) => {
-      return (index % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9);
+    const lastDigit = arr.shift();
+
+    const sum = arr.reduce((acc, val, i) => {
+        return i % 2 !== 0 ? acc + val : acc + ((val *= 2) > 9 ? val - 9 : val);
     }, 0);
 
-    return (sum + lastDigit) % 10 === 0;
+    return (sum + lastDigit) % 10 === 0
   }
 }

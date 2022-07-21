@@ -15,7 +15,6 @@
             v-model="name"
             class="input peer"
             placeholder=" "
-            required
           >
           <label
             for="name"
