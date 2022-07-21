@@ -54,29 +54,26 @@
             formErrors.cardNumber ? 'fieldset--error' : null,
           ]"
         >
-          <div class="flex items-center">
-            <input
-              id="credit-card-number"
-              v-model="creditCardNumber"
-              type="number"
-              class="input peer"
-              placeholder=" "
-              required
-              @input="clearErrors"
-              @keypress="isNumber"
-            >
-            <label
-              for="credit-card-number"
-              class="label"
-            >
-              Credit Card Number
-            </label>
-            <div
-              v-if="type"
-              class="fieldset__apend"
-            >
-              {{ type.name }}
-            </div>
+          <input
+            id="credit-card-number"
+            :value="creditCardNumber"
+            type="number"
+            class="input peer"
+            placeholder=" "
+            required
+            @input="updateCreditCardNumber"
+          >
+          <label
+            for="credit-card-number"
+            class="label"
+          >
+            Credit Card Number
+          </label>
+          <div
+            v-if="type"
+            class="fieldset__apend"
+          >
+            {{ type.name }}
           </div>
           <small
             v-if="formErrors.cardNumber"
@@ -92,13 +89,13 @@
         >
           <input
             id="expiry"
-            v-model="expiry"
+            :value="expiry"
             type="text"
             class="input peer"
             placeholder=" "
             required
             @keypress="isNumber"
-            @input="clearErrors"
+            @input="updateExpiry"
           >
           <label
             for="expiry"
@@ -182,10 +179,19 @@ export default defineComponent({
       cardIsValid.value = formErrors.expiry === false && formErrors.cardNumber === false;
     }
 
-    const isNumber = (evt: KeyboardEvent) => {
-      const charCode = (evt.which) ? evt.which : evt.keyCode;
+    const updateCreditCardNumber = ($event: any) => {
+      // This is due to v-model doing weird things with numbers
+      creditCardNumber.value = $event.target.value;
+    }
+
+    const updateExpiry = ($event: any) => {
+      expiry.value = $event.target.value;
+    }
+
+    const isNumber = ($event: KeyboardEvent) => {
+      const charCode = ($event.which) ? $event.which : $event.keyCode;
       if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-        evt.preventDefault();
+        $event.preventDefault();
       } else {
         return true;
       }
@@ -235,7 +241,9 @@ export default defineComponent({
     return {
       name,
       creditCardNumber,
+      updateCreditCardNumber,
       expiry,
+      updateExpiry,
       ccv,
       type,
       numberIsValid,
@@ -315,7 +323,7 @@ export default defineComponent({
     }
   }
   &__apend {
-    @apply flex
+    @apply
     text-gray-500
     bg-gray-200
     py-3
