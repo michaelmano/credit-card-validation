@@ -70,7 +70,7 @@ jobs:
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: be20633c74219d3cf5b1bb688a0e2b22
-        filename: your-repo-name__${{ env.BRANCH }}.json
+        filename: credit-card-validator__${{ env.BRANCH }}.json
         label: Test Coverage
         message: ${{ env.COVERAGE }}
         color: green

@@ -1,5 +1,7 @@
 # Vue 3 + TypeScript + Vite - Credit Card Validator.
 
+![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/michaelmano/be20633c74219d3cf5b1bb688a0e2b22/raw/credit-card-validator__heads_main.json)
+
 Setup requires node v16.16.0 `nvm install v16.16.0`
 
 ## Main files used
