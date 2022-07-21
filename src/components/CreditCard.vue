@@ -35,9 +35,10 @@
         <fieldset class="fieldset">
           <input
             id="name"
-            v-model="name"
+            :value="name"
             class="input peer"
             placeholder=" "
+            @input="updateName"
           >
           <label
             for="name"
@@ -179,13 +180,20 @@ export default defineComponent({
       cardIsValid.value = formErrors.expiry === false && formErrors.cardNumber === false;
     }
 
-    const updateCreditCardNumber = ($event: any) => {
+    const updateName = ($event: any) => {
       // This is due to v-model doing weird things with numbers
+      name.value = $event.target.value;
+      clearErrors();
+    }
+
+    const updateCreditCardNumber = ($event: any) => {
       creditCardNumber.value = $event.target.value;
+      clearErrors();
     }
 
     const updateExpiry = ($event: any) => {
       expiry.value = $event.target.value;
+      clearErrors();
     }
 
     const isNumber = ($event: KeyboardEvent) => {
@@ -240,6 +248,7 @@ export default defineComponent({
 
     return {
       name,
+      updateName,
       creditCardNumber,
       updateCreditCardNumber,
       expiry,
