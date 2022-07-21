@@ -1,72 +1,178 @@
 <template>
-  <form class="w-full max-w-lg mx-auto content-center container">
-    <h2 class="text-md mb-4 font-semi">Credit card validation</h2>
+  <form
+    class="w-full max-w-lg mx-auto content-center container"
+    @submit.prevent="validate"
+  >
+    <h2 class="text-md mb-4 font-semi">
+      Credit card validation
+    </h2>
+
     <div class="flex flex-wrap -mx-3 mb-6">
       <div class="w-full px-3 mb-5">
         <fieldset class="fieldset">
-          <input v-model="name" id="name" class="input peer" placeholder=" " required />
-          <label for="name" class="label">Name on card</label>
+          <input
+            id="name"
+            v-model="name"
+            class="input peer"
+            placeholder=" "
+            required
+          >
+          <label
+            for="name"
+            class="label"
+          >
+            Name on card
+          </label>
         </fieldset>
       </div>
       <div class="w-full px-3 mb-5">
-        <fieldset class="fieldset">
-          <input v-model="creditCardNumber" type="number" id="credit-card-number" class="input peer" placeholder=" " required />
-          <label for="credit-card-number" class="label">Credit Card Number</label>
+        <fieldset
+          :class="[
+            'fieldset',
+            formErrors.cardNumber ? 'fieldset--error' : null,
+          ]"
+        >
+          <div class="flex items-center">
+            <input
+              id="credit-card-number"
+              v-model="creditCardNumber"
+              type="number"
+              class="input peer"
+              placeholder=" "
+              required
+              @input="clearErrors"
+            >
+            <div
+              v-if="type"
+              class="fieldset__apend"
+            >
+              {{ type.name }}
+            </div>
+          </div>
+          <label
+            for="credit-card-number"
+            class="label"
+          >
+            Credit Card Number
+          </label>
+          <small
+            v-if="formErrors.cardNumber"
+            class="text-red-500"
+          >
+            The credit card number is invalid
+          </small>
         </fieldset>
       </div>
       <div class="w-full md:w-1/2 px-3">
-        <fieldset class="fieldset">
-          <input v-model="expiary" type="text" id="expiary" class="input peer" placeholder=" " required/>
-          <label for="expiary" class="label">Exp. Date (mm/yyyy)</label>
+        <fieldset
+          :class="['fieldset', formErrors.expiry ? 'fieldset--error' : null]"
+        >
+          <input
+            id="expiry"
+            v-model="expiry"
+            type="text"
+            class="input peer"
+            placeholder=" "
+            required
+            @input="clearErrors"
+          >
+          <label
+            for="expiry"
+            class="label"
+          >
+            Exp. Date (mm/yyyy)
+          </label>
+          <small
+            v-if="formErrors.expiry"
+            class="text-red-500"
+          >
+            There is an issue with the card expiry
+          </small>
         </fieldset>
       </div>
-      <div class="w-full md:w-1/2 px-3">
+      <div
+        class="w-full md:w-1/2 px-3 mb-3"
+      >
         <fieldset class="fieldset">
-          <input v-model="ccv" type="number" id="ccv" class="input peer" placeholder=" " required />
-          <label for="ccv" class="label">CCV</label>
+          <input
+            id="ccv"
+            v-model="ccv"
+            type="number"
+            class="input peer"
+            placeholder=" "
+            required
+          >
+          <label
+            for="ccv"
+            class="label"
+          >
+            CCV
+          </label>
+        </fieldset>
+      </div>
+      <div
+        class="w-full md:w-1/2 px-3"
+      >
+        <fieldset
+          class="fieldset"
+        >
+          <button
+            type="submit"
+            class="button"
+          >
+            Validate
+          </button>
         </fieldset>
       </div>
     </div>
-    <button class="button" type="submit">Submit</button>
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue';
-import type { Ref } from 'vue';
+import { defineComponent, watch, ref, reactive, computed } from 'vue'
+import type { Ref } from 'vue'
+import CreditCard from '../classes/CreditCard'
 
 export default defineComponent({
   name: 'VueCreditCard',
   setup() {
     const name: Ref<string> = ref('');
     const creditCardNumber: Ref<string | number> = ref('');
-    const expiary: Ref<string | number> = ref('');
+    const expiry: Ref<string | number> = ref('');
     const ccv: Ref<string | number> = ref('');
+    const formErrors = reactive({
+      cardNumber: false,
+      expiry: false,
+    });
 
+    const creditCard = new CreditCard(creditCardNumber, expiry, ccv);
+    const type = computed(() => creditCard.getType());
+    const numberIsValid = computed(() => creditCard.numberIsValid());
 
-    watch(expiary, (currentValue, oldValue) => {
+    const validate = () => {
+      formErrors.cardNumber = !numberIsValid.value;
+      formErrors.expiry = true;
+    }
+
+    const clearErrors = () => {
+      formErrors.cardNumber = false;
+      formErrors.expiry = false;
+    }
+
+    watch(expiry, (currentValue, oldValue) => {
       const currentLength = currentValue.toString().length;
       const oldLength = oldValue.toString().length;
 
       // Add dash inbetween month and year
       if (oldLength === 1 && currentLength === 2) {
-        expiary.value += '/';
+        expiry.value += '/';
       }
 
       // Dont go over mm/yyyy
       if (currentLength == 8) {
-        expiary.value = oldValue;
+        expiry.value = oldValue;
       }
-    });
-
-    watch(creditCardNumber, (currentValue, oldValue) => {
-      const currentLength = currentValue.toString().length;
-      const oldLength = oldValue.toString().length;
-
-      if (oldLength < 4 && currentLength === 4) {
-        console.log('Find Issuer');
-      }
-    });
+    })
 
     // This is an override as maxlength does not work on number inputs in chrome
     watch(ccv, (currentValue, oldValue) => {
@@ -77,22 +183,26 @@ export default defineComponent({
       if (oldLength < 5 && currentLength === 5) {
         ccv.value = oldValue;
       }
-    });
+    })
 
     return {
       name,
       creditCardNumber,
-      expiary,
+      expiry,
       ccv,
-    };
+      type,
+      numberIsValid,
+      formErrors,
+      validate,
+      clearErrors,
+    }
   },
 })
 </script>
 
 <style lang="scss" scoped>
 .button {
-  @apply
-    bg-blue-500
+  @apply bg-blue-500
     hover:bg-blue-700
     text-white
     font-bold
@@ -102,8 +212,7 @@ export default defineComponent({
 }
 
 .input {
-  @apply
-    block
+  @apply block
     py-2.5
     px-0
     w-full
@@ -125,8 +234,7 @@ export default defineComponent({
 }
 
 .label {
-  @apply
-    absolute
+  @apply absolute
     text-sm
     text-gray-500
     dark:text-gray-400
@@ -148,7 +256,7 @@ export default defineComponent({
 .fieldset {
   @apply relative;
 
-  &__error {
+  &--error {
     & .input {
       @apply border-red-500;
     }
@@ -156,6 +264,16 @@ export default defineComponent({
     & .label {
       @apply text-red-500;
     }
+  }
+  &__apend {
+    @apply flex
+    text-gray-500
+    bg-gray-200
+    py-3
+    tracking-wider
+    rounded-r
+    px-2
+    text-xs;
   }
 }
 </style>
