@@ -42,6 +42,12 @@
               @input="clearErrors"
               @keypress="isNumber"
             >
+             <label
+              for="credit-card-number"
+              class="label"
+            >
+              Credit Card Number
+            </label>
             <div
               v-if="type"
               class="fieldset__apend"
@@ -49,12 +55,6 @@
               {{ type.name }}
             </div>
           </div>
-          <label
-            for="credit-card-number"
-            class="label"
-          >
-            Credit Card Number
-          </label>
           <small
             v-if="formErrors.cardNumber"
             class="text-red-500"
@@ -63,7 +63,7 @@
           </small>
         </fieldset>
       </div>
-      <div class="w-full md:w-1/2 px-3">
+      <div class="w-full md:w-1/2 px-3 mb-5">
         <fieldset
           :class="['fieldset', formErrors.expiry ? 'fieldset--error' : null]"
         >
@@ -92,7 +92,7 @@
         </fieldset>
       </div>
       <div
-        class="w-full md:w-1/2 px-3 mb-3"
+        class="w-full md:w-1/2 px-3 mb-5"
       >
         <fieldset class="fieldset">
           <input
