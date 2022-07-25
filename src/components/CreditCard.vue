@@ -289,9 +289,6 @@ export default defineComponent({
     border-b-2
     border-gray-300
     appearance-none
-    dark:text-white
-    dark:border-gray-600
-    dark:focus:border-blue-500
     focus:outline-none
     focus:ring-0
     rounded
@@ -303,7 +300,6 @@ export default defineComponent({
   @apply absolute
     text-sm
     text-gray-500
-    dark:text-gray-400
     duration-300
     transform
     -translate-y-8
